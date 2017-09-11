@@ -1,9 +1,14 @@
 package constant;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 public class ServerSettings {
+	
+	public static boolean running = true;
 	
 	public static int socketTimeout = 10000;
 	public static boolean keepalive = true;
@@ -32,6 +37,51 @@ public class ServerSettings {
 	public static String defaultPage = "index.html";
 	
 	public static String supportedEncode = "gzip";
+	
+	public static String logFilePath = "";
+	
+	public static int maxSessionThread = 10;
+	
+	
+	public static void loadServerSettings(String file) throws IOException {
+		BufferedReader reader = new BufferedReader(new FileReader(file));
+		String line = null;
+		while( (line = reader.readLine()) != null ) {
+			String[] entry = line.split(":");
+			if(entry.length != 2)
+				continue;
+			String name = entry[0].trim();
+			String value = entry[1].trim();
+			if(name.equals("socketTimeout")) {
+				socketTimeout = Integer.parseInt(value);
+			}
+			else if(name.equals("portNum")) {
+				portNum = Integer.parseInt(value);
+			}
+			else if(name.equals("fileCacheTimeout")) {
+				fileCacheTimeout = Integer.parseInt(value);
+			}
+			else if(name.equals("fileCacheEnabled")) {
+				fileCacheEnabled = Boolean.parseBoolean(value);
+			}
+			else if(name.equals("fileCacheSize")) {
+				fileCacheSize = Integer.parseInt(value);
+			}
+			else if(name.equals("webRoot")) {
+				webRoot = value;
+			}
+			else if(name.equals("defaultPage")) {
+				defaultPage = value;
+			}
+			else if(name.equals("logFilePath")) {
+				logFilePath = value;
+			}
+			else if(name.equals("maxSessionThread")) {
+				maxSessionThread = Integer.parseInt(value);
+			}
+		}
+		reader.close();
+	}
 	
 	
 	

@@ -24,7 +24,7 @@ public class HTTPSession implements Runnable{
 		
 		try (InputStream in = client.getInputStream();OutputStream out = client.getOutputStream()){
 			
-			boolean keepAlive = ServerSettings.getKeepAlive();
+			boolean keepAlive = ServerSettings.running;
 			while(keepAlive) {
 				HTTPObject request = HTTPUtils.receive(in, connectionStatus);
 				String keepAliveFlag = (String) request.getHeader().getHeaders().get(HTTPConstants.CONNECTION.toLowerCase());
@@ -43,7 +43,7 @@ public class HTTPSession implements Runnable{
 		Debug.print("HTTP Session ended. Closing down connection and other stuff", debugCode);
 		connectionStatus.setEndTime(System.currentTimeMillis());
 		close();
-		
+		LogProcessor.addStatus(connectionStatus);
 	}
 	
 	public void close() {

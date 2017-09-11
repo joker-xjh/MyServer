@@ -2,7 +2,9 @@ package server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 
+import constant.ServerSettings;
 import util.Debug;
 
 public class ConnectionListener {
@@ -13,12 +15,23 @@ public class ConnectionListener {
 	
 	public ConnectionListener(int port) throws IOException {
 		serverSocket = new ServerSocket(port);
-		running = true;
+		running = ServerSettings.running;
 	}
 	
 	public void beginListening() {
 		while(running) {
-			Debug.print("Trying to accept incoming TCP connection", debugCode);	
+			Debug.print("Trying to accept incoming TCP connection", debugCode);
+			HTTPSession session = null;
+			try {
+				Socket client = serverSocket.accept();
+				ConnectionStatus status = new ConnectionStatus(client.getInetAddress().toString(), client.getPort(), System.currentTimeMillis());
+				session = new HTTPSession(client, status);
+			} catch (IOException e) {
+				e.printStackTrace();
+				Debug.print("Exception occurred while listening for connection", debugCode);
+				continue;
+			}
+			sessionPool.executeSession(session);
 		}
 	}
 	
