@@ -26,19 +26,19 @@ public class ServerSettings {
 	
 	
 	
-	public static String notFoundFilePath = "res/notfound.html";
-	public static String redirFilePath = "res/redir.html";
-	public static String internalErrorFilePath = "res/internalerror.html";
-	public static String badRequestFilePath = "res/badrequest.html";
+	public static String notFoundFilePath = "src/main/java/resource/notFound.html";
+	public static String redirFilePath = "src/main/java/resource/redirect.html";
+	public static String internalErrorFilePath = "src/main/java/resource/internalError.html";
+	public static String badRequestFilePath = "src/main/java/resource/badRequest.html";
 	public static ConcurrentSkipListSet <String> textTypes = new ConcurrentSkipListSet<String>(Arrays.asList("txt", "html", "css", "js", "htm"));
 
-	public static String webRoot = "";
+	public static String webRoot = "src/main/java/pub/";
 	
 	public static String defaultPage = "index.html";
 	
 	public static String supportedEncode = "gzip";
 	
-	public static String logFilePath = "";
+	public static String logFilePath = "src/main/java/log/";
 	
 	public static int maxSessionThread = 10;
 	

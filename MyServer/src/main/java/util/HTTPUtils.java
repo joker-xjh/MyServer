@@ -1,10 +1,13 @@
 package util;
 
 import java.io.BufferedOutputStream;
+
+
 import java.io.IOException;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -12,7 +15,6 @@ import config.UserSettings;
 import constant.HTTPConstants;
 import constant.ServerSettings;
 import server.ConnectionStatus;
-import server.FileCache;
 import server.HTTPHeader;
 import server.HTTPObject;
 import server.HTTPResponse;
@@ -21,6 +23,8 @@ public class HTTPUtils {
 	
 	private static int debugCode = 0x3;
 	
+	
+	// 从流中解析 Request对象,并记录相应的状态信息
 	public static HTTPObject receive(InputStream in, ConnectionStatus connectionStatus) throws IOException{
 		String header = new String();
 		String line = new String();
@@ -41,7 +45,10 @@ public class HTTPUtils {
 		Debug.print("Starting to parse Header", debugCode);
 		HTTPHeader Header = new HTTPHeader(header);
 		Debug.print("End of parsing Header", debugCode);
-		
+		connectionStatus.setStartTime(new Date());
+		connectionStatus.setMethod(Header.getMethod());
+		connectionStatus.setUri(Header.getUri());
+		connectionStatus.setVersion(Header.getVersion());
 		String bodyLength = Header.getHeaders().get(HTTPConstants.CONTENT_LENGTH.toLowerCase());
 		if( bodyLength == null
 			|| bodyLength.equals("0")) {
@@ -55,19 +62,13 @@ public class HTTPUtils {
 	}
 	
 	
-	public static HTTPObject getResponse(HTTPObject request) {
-		String file = parseRequestURI(request.getHeader().getUri());
-		if(!FileCache.checkFileExists(file)) {
-			return HTTPResponse.notFoundResponse(request);
-		}
-		else if(FileCache.isDirectory(file)) {
-			return HTTPResponse.directoryRedirectResponse(request);
-		}
-		else if(isValidateGetRequest(request)) {
-			return HTTPResponse.GETResponse(request, file);
+	public static HTTPObject getResponse(HTTPObject request, ConnectionStatus status) {
+		String file =ServerSettings.getWebRoot() + parseRequestURI(request.getHeader().getUri());
+		if(isValidateGetRequest(request)) {
+			return HTTPResponse.GETResponse(request, file, status);
 		}
 		else 
-			return HTTPResponse.notFoundResponse(request);
+			return HTTPResponse.notFoundResponse(request, status);
 	}
 	
 	
@@ -99,7 +100,7 @@ public class HTTPUtils {
 			uri = uri.substring(index);
 		StringTokenizer tokenizer = new StringTokenizer(uri, "/");
 		if(tokenizer.countTokens() == 0) {
-			return ServerSettings.getWebRoot() + "\\" + UserSettings.getApplication(); 
+			return  UserSettings.getApplication() + ServerSettings.defaultPage; 
 		}
 		String path = new String();
 		while(tokenizer.hasMoreTokens()) {

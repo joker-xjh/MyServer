@@ -24,7 +24,7 @@ public class ConnectionListener {
 			HTTPSession session = null;
 			try {
 				Socket client = serverSocket.accept();
-				ConnectionStatus status = new ConnectionStatus(client.getInetAddress().toString(), client.getPort(), System.currentTimeMillis());
+				ConnectionStatus status = new ConnectionStatus(client.getInetAddress().toString(), client.getPort());
 				session = new HTTPSession(client, status);
 			} catch (IOException e) {
 				e.printStackTrace();

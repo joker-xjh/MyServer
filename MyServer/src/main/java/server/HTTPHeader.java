@@ -40,7 +40,7 @@ public class HTTPHeader {
 		version = headSplit[2].trim();
 		
 		for(int i=1; i<array.length; i++) {
-			String[] temp = array[1].split(HTTPConstants.HEADER_ATTRIBUTE_SPLIT);
+			String[] temp = array[i].split(HTTPConstants.HEADER_ATTRIBUTE_SPLIT);
 			if(temp.length != 2)
 				continue;
 			headers.put(temp[0].trim().toLowerCase(), temp[1].trim());
