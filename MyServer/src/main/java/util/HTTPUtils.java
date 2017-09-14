@@ -142,7 +142,10 @@ public class HTTPUtils {
 		return true;
 	}
 	
-	
+	public static String getContentType(String file) {
+		String exn = file.substring(file.lastIndexOf('.'));
+		return ServerSettings.getContentType(exn);
+	}
 	
 	
 	

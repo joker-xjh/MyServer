@@ -1,14 +1,12 @@
 package util;
 
 import java.io.BufferedInputStream;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.zip.GZIPOutputStream;
-
-import constant.HTTPConstants;
-import constant.ServerSettings;
 
 public class FileUtil {
 	
@@ -29,14 +27,6 @@ public class FileUtil {
 	public static boolean isDirectory(String file) {
 		File f = new File(file);
 		return f.isDirectory();
-	}
-	
-	public static String getFileExn(String file) {
-		String exn = file.substring(file.lastIndexOf('.')+1);
-		if(ServerSettings.isTextType(exn))
-			return HTTPConstants.TEXT_TYPE+ "/" + exn;
-		else
-			return HTTPConstants.BINARY_TYPE;
 	}
 	
 	public static byte[] comoressGZIP(byte[] file) throws IOException{

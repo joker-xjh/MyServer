@@ -68,11 +68,12 @@ public class HTTPResponse {
 		if(!f.exists()) {
 			return notFoundResponse(request, status);
 		}
+		//如果file是一个目录，就重定向到这个目录的默认页面(index.html)
 		if(FileCache.isDirectory(file)) {
 			return HTTPResponse.directoryRedirectResponse(request, status);
 		}
 		HTTPObject response = new HTTPObject();
-		String contentType = FileUtil.getFileExn(file) +HTTPConstants.CHARSET;
+		String contentType = HTTPUtils.getContentType(file);
 		response.getHeader().setVersion(HTTPConstants.VERSION);
 		response.getHeader().setCode(HTTPConstants.OK_CODE);
 		response.getHeader().setReasonPhrase(HTTPConstants.OK_PHRASE);
