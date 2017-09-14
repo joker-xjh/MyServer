@@ -38,6 +38,8 @@ public class HTTPResponse {
 		return response;
 	}
 	
+	
+	//请求的是一个目录，重定向到目录的默认页面(index.html)
 	public static HTTPObject directoryRedirectResponse(HTTPObject request, ConnectionStatus status) {
 		HTTPObject response = new HTTPObject();
 		String redirect = HTTPUtils.getRedirectUri(request.getHeader().getUri());
@@ -131,7 +133,14 @@ public class HTTPResponse {
 		return response;
 	}
 	
-	
+	//请求动态页面的Response,目前还不会实现。。。。。
+	public static HTTPObject DynamicResponse(HTTPObject request, ConnectionStatus status) {
+		HTTPObject response = new HTTPObject();
+		
+		
+		
+		return response;
+	}
 	
 	
 	

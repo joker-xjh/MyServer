@@ -29,6 +29,6 @@ public class HTTPConstants {
 	public static String INTERNAL_ERROR_CODE = "500";
 	public static String INTERNAL_ERROR_PHRASE = "INTERNAL ERROR";
 	public static String CONTENTENCODING = "Content-Encoding";
-	
+	public static String POST = "POST";
 
 }

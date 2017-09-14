@@ -64,8 +64,11 @@ public class HTTPUtils {
 	
 	public static HTTPObject getResponse(HTTPObject request, ConnectionStatus status) {
 		String file =ServerSettings.getWebRoot() + parseRequestURI(request.getHeader().getUri());
-		if(isValidateGetRequest(request)) {
+		if(isValidateStaticRequest(request)) {
 			return HTTPResponse.GETResponse(request, file, status);
+		}
+		else if(isValidateDynamicRequest(request)) {
+			return HTTPResponse.DynamicResponse(request, status);
 		}
 		else 
 			return HTTPResponse.notFoundResponse(request, status);
@@ -133,14 +136,31 @@ public class HTTPUtils {
 		}
 	}
 	
-	private static boolean isValidateGetRequest(HTTPObject request) {
+	//判断是否是对静态资源的Request
+	private static boolean isValidateStaticRequest(HTTPObject request) {
 		if(!request.getHeader().getMethod().equals(HTTPConstants.GET))
 			return false;
 		String host = request.getHeader().getHeaders().get(HTTPConstants.HOST);
 		if( host == null || host.length() == 0)
 			return false;
-		return true;
+		String uri = request.getHeader().getUri();
+		String prefix = uri.substring(uri.lastIndexOf('.'));
+		if(ServerSettings.isStaticFileType(prefix))
+			return true;
+		return false;
 	}
+	
+	private static boolean isValidateDynamicRequest(HTTPObject request) {
+		String host = request.getHeader().getHeaders().get(HTTPConstants.HOST);
+		if( host == null || host.length() == 0)
+			return false;
+		String uri = request.getHeader().getUri();
+		String prefix = uri.substring(uri.lastIndexOf('.'));
+		if(ServerSettings.isDynamicFileType(prefix))
+			return true;
+		return false;
+	}
+	
 	
 	public static String getContentType(String file) {
 		String exn = file.substring(file.lastIndexOf('.'));

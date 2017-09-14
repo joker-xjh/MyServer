@@ -14,6 +14,7 @@ public class HTTPHeader {
 	private String uri;
 	private String code;
 	private String reasonPhrase;
+	private String query;
 	
 	
 	public HTTPHeader() {
@@ -23,6 +24,7 @@ public class HTTPHeader {
 		uri = new String();
 		code = new String();
 		reasonPhrase = new String();
+		query = new String();
 	}
 	
 	public HTTPHeader(String header) throws IOException{
@@ -36,7 +38,14 @@ public class HTTPHeader {
 		if(headSplit.length != 3)
 			throw new IOException(HTTPConstants.BAD_REQUEST);
 		method = headSplit[0].trim();
-		uri = headSplit[1].trim();
+		int index = headSplit[1].trim().indexOf('?');
+		if(index != -1) {
+			query = uri.substring(index+1);
+			uri = headSplit[1].trim().substring(0, index);
+		}
+		else {
+			uri = headSplit[1].trim();
+		}
 		version = headSplit[2].trim();
 		
 		for(int i=1; i<array.length; i++) {
@@ -98,6 +107,10 @@ public class HTTPHeader {
 
 	public Map<String, String> getHeaders(){
 		return headers;
+	}
+	
+	public String getQuery() {
+		return query;
 	}
 
 }

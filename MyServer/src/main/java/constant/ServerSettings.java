@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class ServerSettings {
 	
@@ -52,7 +54,7 @@ public class ServerSettings {
 		contentType.put(".class", "java/*");
 		//jpe jpeg jpg图片
 		contentType.put(".jpe", "image/jpeg");
-		contentType.put("jpeg", "image/jpeg");
+		contentType.put(".jpeg", "image/jpeg");
 		contentType.put(".jpg", "image/jpeg");
 		//jsp文件	
 		contentType.put(".jsp", "text/html;charset=UTF-8");
@@ -71,6 +73,30 @@ public class ServerSettings {
 		
 		
 	}
+	//静态文件类型
+	public static Set<String> staticFileType = new HashSet<>();
+	//动态文件类型(目前只支持.jsp)
+	public static Set<String> dynamicFileType = new HashSet<>();
+	
+	static {
+		staticFileType.add(".doc");
+		staticFileType.add(".html");
+		staticFileType.add(".htm");
+		staticFileType.add(".ico");
+		staticFileType.add(".img");
+		staticFileType.add(".jpe");
+		staticFileType.add(".jpeg");
+		staticFileType.add(".jpg");
+		staticFileType.add(".pdf");
+		staticFileType.add(".png");
+		staticFileType.add(".ppt");
+		staticFileType.add(".xml");
+		staticFileType.add(".css");
+		staticFileType.add(".js");
+		
+		dynamicFileType.add(".jsp");
+	}
+	
 	
 	//（ 二进制流，不知道文件类型时，用这个）
 	public static final String BINARY_STREAM = "application/octet-stream";
@@ -169,6 +195,14 @@ public class ServerSettings {
 		if(val != null)
 			return val;
 		return BINARY_STREAM;
+	}
+	
+	public static boolean isStaticFileType(String prefix) {
+		return staticFileType.contains(prefix);
+	}
+	
+	public static boolean isDynamicFileType(String prefix) {
+		return dynamicFileType.contains(prefix);
 	}
 	
 
